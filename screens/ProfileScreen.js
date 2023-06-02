@@ -1,12 +1,33 @@
-import React from 'react';
-import {View, Text} from 'react-native';
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
 
-function ProfileScreen() {
+const ProfileScreen = ({ route }) => {
+  const { username, points } = route.params;
+
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Profil</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Profil</Text>
+      <Text style={styles.subtitle}>Pseudo: {username}</Text>
+      <Text style={styles.subtitle}>Points: {points}</Text>
     </View>
   );
-}
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  subtitle: {
+    fontSize: 18,
+    marginBottom: 5,
+  },
+});
 
 export default ProfileScreen;
