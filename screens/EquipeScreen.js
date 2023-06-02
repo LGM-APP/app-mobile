@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, TextInput, StyleSheet, Dimensions, FlatList } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
-const ListCompScreen = ({ navigation }) => {
-  const [competitions, setCompetitions] = useState([
-    { id: '1', name: 'Spring 2023 EUW', region: 'EUW', game: 'League of Legends', description: 'The spring competition for EUW region.', teams: ['Team 1', 'Team 2', 'Team 3'] },
-    { id: '2', name: 'Summer 2023 NA', region: 'NA', game: 'League of Legends', description: 'The summer competition for NA region.', teams: ['Team A', 'Team B', 'Team C'] },
-    { id: '3', name: 'Fall 2023 EUW', region: 'EUW', game: 'Valorant', description: 'The fall competition for EUW region.', teams: ['Team X', 'Team Y', 'Team Z'] },
-    { id: '4', name: 'Winter 2023 NA', region: 'NA', game: 'Valorant', description: 'The winter competition for NA region.', teams: ['Team Alpha', 'Team Beta', 'Team Gamma'] },
+const EquipeScreen = () => {
+  const navigation = useNavigation();
+
+  const [equipes, setEquipes] = useState([
+    { id: '1', name: 'Team 1', region: 'EUW', game: 'League of Legends', description: 'The first team in EUW region.', players: ['Player 1', 'Player 2', 'Player 3'] },
+    { id: '2', name: 'Team 2', region: 'NA', game: 'League of Legends', description: 'The second team in NA region.', players: ['Player A', 'Player B', 'Player C']},
+    { id: '3', name: 'Team 3', region: 'EUW', game: 'Valorant', description: 'The third team in EUW region.', players: ['Player X', 'Player Y', 'Player Z'] },
+    { id: '4', name: 'Team 4', region: 'NA', game: 'Valorant', description: 'The fourth team in NA region.', players: ['Player Alpha', 'Player Beta', 'Player Gamma'] },
   ]);
 
   const [search, setSearch] = useState("");
@@ -25,10 +28,10 @@ const ListCompScreen = ({ navigation }) => {
     setGame(prevGame => prevGame === newGame ? "" : newGame);
   };
 
-  const filteredCompetitions = competitions.filter(competition => {
-    const matchesSearch = !search || competition.name.toLowerCase().includes(search.toLowerCase());
-    const matchesRegion = !region || competition.region === region;
-    const matchesGame = !game || competition.game === game;
+  const filteredEquipes = equipes.filter(equipe => {
+    const matchesSearch = !search || equipe.name.toLowerCase().includes(search.toLowerCase());
+    const matchesRegion = !region || equipe.region === region;
+    const matchesGame = !game || equipe.game === game;
 
     return matchesSearch && matchesRegion && matchesGame;
   });
@@ -36,8 +39,8 @@ const ListCompScreen = ({ navigation }) => {
   const renderItem = ({ item }) => (
     <TouchableOpacity
       key={item.id}
-      style={styles.competitionBox}
-      onPress={() => navigation.navigate('CompetitionDetails', { competition: item })}
+      style={styles.equipeBox}
+      onPress={() => navigation.navigate('EquipeDetails', { equipe: item })}
     >
       <Text>{item.name}</Text>
     </TouchableOpacity>
@@ -48,33 +51,33 @@ const ListCompScreen = ({ navigation }) => {
       <TextInput
         value={search}
         onChangeText={handleSearchChange}
-        placeholder="Search competitions"
+        placeholder="Search teams"
       />
 
       <View style={styles.filters}>
         <View style={styles.filterRow}>
-          <TouchableOpacity onPress={() => handleGameChange('lol')}>
-            <Text>{game === 'lol' ? '✅' : ''} LOL</Text>
+          <TouchableOpacity onPress={() => handleGameChange('League of Legends')}>
+            <Text>{game === 'League of Legends' ? '✅' : ''} League of Legends</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => handleGameChange('valorant')}>
-            <Text>{game === 'valorant' ? '✅' : ''} Valorant</Text>
+          <TouchableOpacity onPress={() => handleGameChange('Valorant')}>
+            <Text>{game === 'Valorant' ? '✅' : ''} Valorant</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.filterRow}>
-          <TouchableOpacity onPress={() => handleRegionChange('euw')}>
-            <Text>{region === 'euw' ? '✅' : ''} EUW</Text>
+          <TouchableOpacity onPress={() => handleRegionChange('EUW')}>
+            <Text>{region === 'EUW' ? '✅' : ''} EUW</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => handleRegionChange('na')}>
-            <Text>{region === 'na' ? '✅' : ''} NA</Text>
+          <TouchableOpacity onPress={() => handleRegionChange('NA')}>
+            <Text>{region === 'NA' ? '✅' : ''} NA</Text>
           </TouchableOpacity>
         </View>
       </View>
 
       <FlatList
-        data={filteredCompetitions}
+        data={filteredEquipes}
         renderItem={renderItem}
         keyExtractor={item => item.id}
       />
@@ -93,7 +96,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
 
-  competitionBox: {
+  equipeBox: {
     height: Dimensions.get('window').height * 0.10, // 10% of screen height
     backgroundColor: '#FFF',
     justifyContent: 'center',
@@ -111,4 +114,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ListCompScreen;
+export default EquipeScreen;

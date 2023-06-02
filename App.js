@@ -4,6 +4,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import SignupScreen from './screens/SignupScreen';
 import DrawerNavigator from './components/DrawerNavigator';
 import InscriptionScreen from './screens/InscriptionScreen';
+import CompetitionDetails from './screens/CompetitionDetails';
+import EquipeDetails from './screens/EquipeDetails'; // Importez EquipeDetails
 
 const Stack = createStackNavigator();
 
@@ -20,6 +22,8 @@ function App() {
             headerShown: false,
           }}
         />
+        <Stack.Screen name="CompetitionDetails" component={CompetitionDetails} />
+        <Stack.Screen name="EquipeDetails" component={EquipeDetails} />
       </Stack.Navigator>
     </NavigationContainer>
   );

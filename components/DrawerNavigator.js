@@ -5,7 +5,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import HomeScreen from '../screens/HomeScreen';
 import SettingScreen from '../screens/SettingScreen';
 import GamesScreen from '../screens/GamesScreen';
-import ListTeamScreen from '../screens/ListTeamScreen';
+import EquipeScreen from '../screens/EquipeScreen';
 import ListCompScreen from '../screens/ListCompScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import TopScreen from '../screens/TopScreen';
@@ -51,7 +51,7 @@ function DrawerNavigator() {
       />
       <Drawer.Screen
         name="Equipes"
-        component={ListTeamScreen}
+        component={EquipeScreen}
         options={{
           drawerLabel: 'Equipes',
           drawerIcon: ({ color, size }) => (
