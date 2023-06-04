@@ -1,9 +1,10 @@
+// EquipeDetails.js
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
 const EquipeDetails = ({ route }) => {
-  const { equipe } = route.params;
-  const { name, game, region, description, players } = equipe;
+  const { team } = route.params;
+  const { name, game, region, description, players } = team;
 
   return (
     <View style={styles.container}>
@@ -11,7 +12,7 @@ const EquipeDetails = ({ route }) => {
       <Text style={styles.subtitle}>Game: {game}</Text>
       <Text style={styles.subtitle}>Region: {region}</Text>
       <Text style={styles.description}>{description}</Text>
-      <Text style={styles.playersTitle}>Players:</Text>
+      <Text style={styles.playersTitle}>Players:</Text> 
       {players.map((player, index) => (
         <Text key={index} style={styles.player}>{player}</Text>
       ))}

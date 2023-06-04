@@ -1,8 +1,10 @@
+// ListCompScreen.js
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, TextInput, StyleSheet, Dimensions, FlatList } from "react-native";
 import { RadioButton } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 
-const ListCompScreen = ({ navigation }) => {
+const ListCompScreen = () => {
   const [competitions, setCompetitions] = useState([
     { id: '1', name: 'Spring 2023 EUW', region: 'EUW', game: 'League of Legends', description: 'The spring competition for EUW region.', teams: ['Team 1', 'Team 2', 'Team 3'] },
     { id: '2', name: 'Summer 2023 NA', region: 'NA', game: 'League of Legends', description: 'The summer competition for NA region.', teams: ['Team A', 'Team B', 'Team C'] },
@@ -41,15 +43,23 @@ const ListCompScreen = ({ navigation }) => {
     return matchesSearch && matchesRegion && matchesGame;
   });
 
-  const renderItem = ({ item }) => (
-    <TouchableOpacity
-      key={item.id}
-      style={styles.competitionBox}
-      onPress={() => navigation.navigate('CompetitionDetails', { competition: item })}
-    >
-      <Text>{item.name}</Text>
-    </TouchableOpacity>
-  );
+  const navigation = useNavigation();
+
+  const renderItem = ({ item }) => {
+    const handleTeamPress = () => {
+      navigation.navigate('CompetitionDetails', { competition: item });
+    };
+
+    return (
+      <TouchableOpacity
+        key={item.id}
+        style={styles.competitionBox}
+        onPress={handleTeamPress}
+      >
+        <Text>{item.name}</Text>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -114,24 +124,21 @@ const styles = StyleSheet.create({
   header: {
     paddingHorizontal: 10,
     paddingVertical: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
-    elevation: 2,
     backgroundColor: '#fff',
-    marginBottom: 10,
-    borderTopColor: 'gray',
-    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderBottomColor: 'gray',
   },
   textInput: {
     height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    paddingHorizontal: 10,
   },
   filters: {
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 10,
+    marginVertical: 10,
   },
   filterRow: {
     flexDirection: 'row',
@@ -142,6 +149,8 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     flex: 1,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
   },
   competitionBox: {
     height: Dimensions.get('window').height * 0.1,
@@ -149,7 +158,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
-    margin: 10,
+    marginVertical: 10,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,

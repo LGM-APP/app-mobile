@@ -1,3 +1,4 @@
+// EquipeScreen.js
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, TextInput, StyleSheet, Dimensions, FlatList } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -40,7 +41,7 @@ const EquipeScreen = () => {
     <TouchableOpacity
       key={item.id}
       style={styles.equipeBox}
-      onPress={() => navigation.navigate('EquipeDetails', { equipe: item })}
+      onPress={() => navigation.navigate('EquipeDetails', { team: item })}
     >
       <Text>{item.name}</Text>
     </TouchableOpacity>
