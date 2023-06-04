@@ -7,6 +7,10 @@ const ListCompScreen = ({ navigation }) => {
     { id: '2', name: 'Summer 2023 NA', region: 'NA', game: 'League of Legends', description: 'The summer competition for NA region.', teams: ['Team A', 'Team B', 'Team C'] },
     { id: '3', name: 'Fall 2023 EUW', region: 'EUW', game: 'Valorant', description: 'The fall competition for EUW region.', teams: ['Team X', 'Team Y', 'Team Z'] },
     { id: '4', name: 'Winter 2023 NA', region: 'NA', game: 'Valorant', description: 'The winter competition for NA region.', teams: ['Team Alpha', 'Team Beta', 'Team Gamma'] },
+    { id: '5', name: 'Spring 2024 EUW', region: 'EUW', game: 'League of Legends', description: 'The spring competition for EUW region.', teams: ['Team 1', 'Team 2', 'Team 3'] },
+    { id: '6', name: 'Summer 2024 NA', region: 'NA', game: 'League of Legends', description: 'The summer competition for NA region.', teams: ['Team A', 'Team B', 'Team C'] },
+    { id: '7', name: 'Fall 2024 EUW', region: 'EUW', game: 'Valorant', description: 'The fall competition for EUW region.', teams: ['Team X', 'Team Y', 'Team Z'] },
+    { id: '8', name: 'Winter 2024 NA', region: 'NA', game: 'Valorant', description: 'The winter competition for NA region.', teams: ['Team Alpha', 'Team Beta', 'Team Gamma'] },
   ]);
 
   const [search, setSearch] = useState("");
@@ -53,22 +57,22 @@ const ListCompScreen = ({ navigation }) => {
 
       <View style={styles.filters}>
         <View style={styles.filterRow}>
-          <TouchableOpacity onPress={() => handleGameChange('lol')}>
-            <Text>{game === 'lol' ? '✅' : ''} LOL</Text>
+          <TouchableOpacity onPress={() => handleGameChange('League of Legends')}>
+            <Text>{game === 'League of Legends' ? '✅' : ''} LOL</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => handleGameChange('valorant')}>
-            <Text>{game === 'valorant' ? '✅' : ''} Valorant</Text>
+          <TouchableOpacity onPress={() => handleGameChange('Valorant')}>
+            <Text>{game === 'Valorant' ? '✅' : ''} Valorant</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.filterRow}>
-          <TouchableOpacity onPress={() => handleRegionChange('euw')}>
-            <Text>{region === 'euw' ? '✅' : ''} EUW</Text>
+          <TouchableOpacity onPress={() => handleRegionChange('EUW')}>
+            <Text>{region === 'EUW' ? '✅' : ''} EUW</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => handleRegionChange('na')}>
-            <Text>{region === 'na' ? '✅' : ''} NA</Text>
+          <TouchableOpacity onPress={() => handleRegionChange('NA')}>
+            <Text>{region === 'NA' ? '✅' : ''} NA</Text>
           </TouchableOpacity>
         </View>
       </View>

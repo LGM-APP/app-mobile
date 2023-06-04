@@ -5,6 +5,18 @@ const HomeScreen = () => {
   const matches = [
     { id: "1", team1: "G2 Esports", team2: "Fnatic", odds1: 1.8, odds2: 2.2 },
     { id: "2", team1: "G2 Esports", team2: "OG", odds1: 1.8, odds2: 4.2 },
+    { id: "3", team1: "Fnatic", team2: "OG", odds1: 2.8, odds2: 2.2 },
+    { id: "4", team1: "G2 Esports", team2: "Rogue", odds1: 1.8, odds2: 2.2 },
+    { id: "5", team1: "Fnatic", team2: "Rogue", odds1: 1.8, odds2: 2.2 },
+    { id: "6", team1: "OG", team2: "Rogue", odds1: 1.8, odds2: 2.2 },
+    { id: "7", team1: "G2 Esports", team2: "Misfits", odds1: 1.8, odds2: 2.2 },
+    { id: "8", team1: "Fnatic", team2: "Misfits", odds1: 1.8, odds2: 2.2 },
+    { id: "9", team1: "OG", team2: "Misfits", odds1: 1.8, odds2: 2.2 },
+    { id: "10", team1: "Rogue", team2: "Misfits", odds1: 1.8, odds2: 2.2 },
+    { id: "11", team1: "G2 Esports", team2: "Excel", odds1: 1.8, odds2: 2.2 },
+    { id: "12", team1: "Fnatic", team2: "Excel", odds1: 1.8, odds2: 2.2 },
+    { id: "13", team1: "OG", team2: "Excel", odds1: 1.8, odds2: 2.2 },
+    { id: "14", team1: "Rogue", team2: "Excel", odds1: 1.8, odds2: 2.2 },
     // Ajoutez plus de matchs ici si nécessaire
   ];
 
