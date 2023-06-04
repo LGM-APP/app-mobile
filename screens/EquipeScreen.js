@@ -1,7 +1,7 @@
-// EquipeScreen.js
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, TextInput, StyleSheet, Dimensions, FlatList } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { RadioButton } from 'react-native-paper';
 
 const EquipeScreen = () => {
   const navigation = useNavigation();
@@ -48,53 +48,92 @@ const EquipeScreen = () => {
   );
 
   return (
-    <View>
-      <TextInput
-        value={search}
-        onChangeText={handleSearchChange}
-        placeholder="Search teams"
-      />
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <TextInput
+          style={styles.textInput}
+          value={search}
+          onChangeText={handleSearchChange}
+          placeholder="Search teams..."
+        />
+      </View>
 
       <View style={styles.filters}>
         <View style={styles.filterRow}>
-          <TouchableOpacity onPress={() => handleGameChange('League of Legends')}>
-            <Text>{game === 'League of Legends' ? '✅' : ''} League of Legends</Text>
-          </TouchableOpacity>
+          <RadioButton.Android
+            value="League of Legends"
+            status={game === 'League of Legends' ? 'checked' : 'unchecked'}
+            onPress={() => handleGameChange('League of Legends')}
+          />
+          <Text style={styles.filterText}>League of Legends</Text>
 
-          <TouchableOpacity onPress={() => handleGameChange('Valorant')}>
-            <Text>{game === 'Valorant' ? '✅' : ''} Valorant</Text>
-          </TouchableOpacity>
+          <RadioButton.Android
+            value="Valorant"
+            status={game === 'Valorant' ? 'checked' : 'unchecked'}
+            onPress={() => handleGameChange('Valorant')}
+          />
+          <Text style={styles.filterText}>Valorant</Text>
         </View>
 
         <View style={styles.filterRow}>
-          <TouchableOpacity onPress={() => handleRegionChange('EUW')}>
-            <Text>{region === 'EUW' ? '✅' : ''} EUW</Text>
-          </TouchableOpacity>
+          <RadioButton.Android
+            value="EUW"
+            status={region === 'EUW' ? 'checked' : 'unchecked'}
+            onPress={() => handleRegionChange('EUW')}
+          />
+          <Text style={styles.filterText}>EUW</Text>
 
-          <TouchableOpacity onPress={() => handleRegionChange('NA')}>
-            <Text>{region === 'NA' ? '✅' : ''} NA</Text>
-          </TouchableOpacity>
+          <RadioButton.Android
+            value="NA"
+            status={region === 'NA' ? 'checked' : 'unchecked'}
+            onPress={() => handleRegionChange('NA')}
+          />
+          <Text style={styles.filterText}>NA</Text>
         </View>
       </View>
 
-      <FlatList
-        data={filteredEquipes}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-      />
+      <View style={styles.listContainer}>
+        <FlatList
+          data={filteredEquipes}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+        />
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  header: {
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    backgroundColor: '#FFF',
+    elevation: 2,
+  },
+  textInput: {
+    height: 40,
+    paddingHorizontal: 10,
+  },
+
   filters: {
     flexDirection: 'column',
-    justifyContent: 'space-around',
-    margin: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   filterRow: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  filterText: {
+    marginLeft: 0,
+  },
+  listContainer: {
+    flex: 1,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
   },
 
   equipeBox: {

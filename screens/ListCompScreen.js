@@ -1,4 +1,3 @@
-// ListCompScreen.js
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, TextInput, StyleSheet, Dimensions, FlatList } from "react-native";
 import { RadioButton } from 'react-native-paper';
@@ -125,20 +124,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 10,
     backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: 'gray',
+    elevation: 2,
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
   },
   textInput: {
     height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
     paddingHorizontal: 10,
   },
   filters: {
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 10,
   },
   filterRow: {
     flexDirection: 'row',
