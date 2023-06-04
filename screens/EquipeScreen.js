@@ -112,6 +112,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     backgroundColor: '#FFF',
     elevation: 2,
+    borderTopWidth: 1,
+    borderTopColor: '#DDD',
   },
   textInput: {
     height: 40,
