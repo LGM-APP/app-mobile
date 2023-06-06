@@ -79,8 +79,10 @@ const HomeScreen = () => {
 
   const handleValidateBet = () => {
     console.log("Bet validated with the following cart: ", cart);
+    console.log("Bet validated with the following cart: ", cart);
     // Ajoutez ici la logique nécessaire pour valider le pari
     // Par exemple, vous pouvez envoyer cette information à une API
+    handleClearCart(); // vider le panier après la validation
   };
 
   return (
@@ -122,25 +124,22 @@ const HomeScreen = () => {
           {cart.map((item, index) => (
             <View key={index} style={styles.cartItem}>
               <Text style={styles.cartItemText}>
-                {item.team} - {item.odds}
+                Match {item.id}: {item.team} - Cote: {item.odds}
               </Text>
-              <TouchableOpacity
-                style={styles.removeButton}
-                onPress={() => handleRemoveFromCart(index)}
-              >
+              <TouchableOpacity style={styles.removeButton} onPress={() => handleRemoveFromCart(index)}>
                 <Text style={styles.removeButtonText}>Supprimer</Text>
               </TouchableOpacity>
             </View>
           ))}
           {cart.length > 0 && (
-            <>
+            <View style={styles.cartActionContainer}>
               <TouchableOpacity style={styles.clearCartButton} onPress={handleClearCart}>
                 <Text style={styles.clearCartButtonText}>Vider le panier</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.validateBetButton} onPress={handleValidateBet}>
                 <Text style={styles.validateBetButtonText}>Valider le pari</Text>
               </TouchableOpacity>
-            </>
+            </View>
           )}
           <View style={styles.totalContainer}>
             <Text style={styles.totalText}>Cote totale :</Text>
@@ -302,6 +301,35 @@ const styles = StyleSheet.create({
   },
   validateBetButtonText: {
     color: "#fff",
+  },
+  cartActionContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginVertical: 10,
+  },
+  clearCartButton: {
+    backgroundColor: "#f00",
+    borderRadius: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    flex: 1,
+    marginRight: 5,
+  },
+  clearCartButtonText: {
+    color: "#fff",
+    textAlign: "center",
+  },
+  validateBetButton: {
+    backgroundColor: "#0d3948",
+    borderRadius: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    flex: 1,
+    marginLeft: 5,
+  },
+  validateBetButtonText: {
+    color: "#fff",
+    textAlign: "center",
   },
 });
 
