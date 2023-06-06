@@ -1,24 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput } from "react-native";
+import { matchs_service } from "../services/matchs.service";
+import Pagination from "./pagination/Pagination";
+import { bet_service } from "../services/bet.service";
 
 const HomeScreen = () => {
-  const matches = [
-    { id: "1", team1: "G2 Esports", team2: "Fnatic", odds1: 1.8, odds2: 2.2 },
-    { id: "2", team1: "G2 Esports", team2: "OG", odds1: 1.8, odds2: 4.2 },
-    { id: "3", team1: "Fnatic", team2: "OG", odds1: 2.8, odds2: 2.2 },
-    { id: "4", team1: "G2 Esports", team2: "Rogue", odds1: 1.8, odds2: 2.2 },
-    { id: "5", team1: "Fnatic", team2: "Rogue", odds1: 1.8, odds2: 2.2 },
-    { id: "6", team1: "OG", team2: "Rogue", odds1: 1.8, odds2: 2.2 },
-    { id: "7", team1: "G2 Esports", team2: "Misfits", odds1: 1.8, odds2: 2.2 },
-    { id: "8", team1: "Fnatic", team2: "Misfits", odds1: 1.8, odds2: 2.2 },
-    { id: "9", team1: "OG", team2: "Misfits", odds1: 1.8, odds2: 2.2 },
-    { id: "10", team1: "Rogue", team2: "Misfits", odds1: 1.8, odds2: 2.2 },
-    { id: "11", team1: "G2 Esports", team2: "Excel", odds1: 1.8, odds2: 2.2 },
-    { id: "12", team1: "Fnatic", team2: "Excel", odds1: 1.8, odds2: 2.2 },
-    { id: "13", team1: "OG", team2: "Excel", odds1: 1.8, odds2: 2.2 },
-    { id: "14", team1: "Rogue", team2: "Excel", odds1: 1.8, odds2: 2.2 },
-    // Ajoutez plus de matchs ici si nécessaire
-  ];
+  const [currentPage, setCurrentPage] = useState(1);
+	const [matches, setMatches] = useState([]);
+	const [totalPages, setTotalPages] = useState(0);
+
+	useEffect(() => {
+		const fetchMatchData = async () => {
+			try {
+				const data = await matchs_service.getAllMatchs(currentPage);
+				setMatches(data.matchs);
+				setTotalPages(data.totalPages);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+
+		fetchMatchData();
+	}, [currentPage]);
 
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -78,13 +81,23 @@ const HomeScreen = () => {
   };
 
   const handleValidateBet = () => {
-    console.log("Bet validated with the following cart: ", cart);
-    const potentialWin = calculatePotentialWin();
-    alert(`Vous avez validé votre pari. Votre gain potentiel est de ${potentialWin} euros.`);
-    console.log("Gain potentiel: ", potentialWin );
-    // Ajoutez ici la logique nécessaire pour valider le pari
-    // Par exemple, vous pouvez envoyer cette information à une API
-    handleClearCart(); // vider le panier après la validation
+    
+    cart.forEach((bet) => {
+      console.log(bet);
+      bet_service
+        .addBet({
+          matchID: bet.id,
+          betTeamID: bet.team,
+          amount: betAmount,
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
+    handleClearCart();
   };
 
 
@@ -92,32 +105,42 @@ const HomeScreen = () => {
     <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
         {matches.map((match, index) => (
+          <View>
+            <Text>
+            {match.tournament && match.tournament.serie.leagueId.name}
+                        {" - "}
+                        {match.tournament && match.tournament.serie.fullName}
+                        {" : "}
+                        {match.tournament && match.tournament.name}
+            </Text>
+          
           <View key={index} style={styles.matchContainer}>
-            <Text style={styles.teamName}>{match.team1}</Text>
+            <Text style={styles.teamName}>{match.home.name}</Text>
             <TouchableOpacity
               style={[
                 styles.oddsButton,
-                selectedOdds[`${match.id}-${match.team1}`] && { backgroundColor: "#0a0836" },
+                selectedOdds[`${match.id}-${match.home.id}`] && { backgroundColor: "#0a0836" },
               ]}
-              onPress={() => handleOddsPress(match.id, match.team1, match.odds1)}
-              disabled={isTeamAlreadyInCart(match.id, match.team1)}
+              onPress={() => handleOddsPress(match.id, match.home.id, match.odds1)}
+              disabled={isTeamAlreadyInCart(match.id, match.home.id)}
             >
-              <Text style={styles.oddsButtonText}>{match.odds1}</Text>
+              <Text style={styles.oddsButtonText}>{match.homeOdd}</Text>
             </TouchableOpacity>
             <View style={{ width: 20 }}></View>
             <TouchableOpacity
               style={[
                 styles.oddsButton,
-                selectedOdds[`${match.id}-${match.team2}`] && { backgroundColor: "#0a0836" },
+                selectedOdds[`${match.id}-${match.away.id}`] && { backgroundColor: "#0a0836" },
               ]}
-              onPress={() => handleOddsPress(match.id, match.team2, match.odds2)}
-              disabled={isTeamAlreadyInCart(match.id, match.team2)}
+              onPress={() => handleOddsPress(match.id, match.away.id, match.odds2)}
+              disabled={isTeamAlreadyInCart(match.id, match.away.id)}
             >
-              <Text style={styles.oddsButtonText}>{match.odds2}</Text>
+              <Text style={styles.oddsButtonText}>{match.awayOdd}</Text>
             </TouchableOpacity>
             <Text style={[styles.teamName, styles.teamNameRight]}>
-              {match.team2}
+              {match.away.name}
             </Text>
+          </View>
           </View>
         ))}
       </ScrollView>
@@ -166,6 +189,11 @@ const HomeScreen = () => {
       <TouchableOpacity style={styles.cartButton} onPress={handleToggleCart}>
         <Text style={styles.cartButtonText}>Panier ({cart.length})</Text>
       </TouchableOpacity>
+      <Pagination
+				currentPage={currentPage}
+				totalPages={totalPages}
+				onPageChange={setCurrentPage}
+			/>
     </View>
   );
 };

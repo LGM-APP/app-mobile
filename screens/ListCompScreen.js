@@ -1,22 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, TextInput, StyleSheet, Dimensions, FlatList } from "react-native";
 import { RadioButton } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
+import Pagination from "./pagination/Pagination";
+
 
 const ListCompScreen = () => {
-  const [competitions, setCompetitions] = useState([
-    { id: '1', name: 'Spring 2023 EUW', region: 'EUW', game: 'League of Legends', description: 'The spring competition for EUW region.', teams: ['Team 1', 'Team 2', 'Team 3'] },
-    { id: '2', name: 'Summer 2023 NA', region: 'NA', game: 'League of Legends', description: 'The summer competition for NA region.', teams: ['Team A', 'Team B', 'Team C'] },
-    { id: '3', name: 'Fall 2023 EUW', region: 'EUW', game: 'Valorant', description: 'The fall competition for EUW region.', teams: ['Team X', 'Team Y', 'Team Z'] },
-    { id: '4', name: 'Winter 2023 NA', region: 'NA', game: 'Valorant', description: 'The winter competition for NA region.', teams: ['Team Alpha', 'Team Beta', 'Team Gamma'] },
-    { id: '5', name: 'Spring 2024 EUW', region: 'EUW', game: 'League of Legends', description: 'The spring competition for EUW region.', teams: ['Team 1', 'Team 2', 'Team 3'] },
-    { id: '6', name: 'Summer 2024 NA', region: 'NA', game: 'League of Legends', description: 'The summer competition for NA region.', teams: ['Team A', 'Team B', 'Team C'] },
-    { id: '7', name: 'Fall 2024 EUW', region: 'EUW', game: 'Valorant', description: 'The fall competition for EUW region.', teams: ['Team X', 'Team Y', 'Team Z'] },
-    { id: '8', name: 'Winter 2024 NA', region: 'NA', game: 'Valorant', description: 'The winter competition for NA region.', teams: ['Team Alpha', 'Team Beta', 'Team Gamma'] },
-    { id: '9', name: 'Spring 2025 EUW', region: 'EUW', game: 'League of Legends', description: 'The spring competition for EUW region.', teams: ['Team 1', 'Team 2', 'Team 3'] },
-    { id: '10', name: 'Summer 2025 NA', region: 'NA', game: 'League of Legends', description: 'The summer competition for NA region.', teams: ['Team A', 'Team B', 'Team C'] },
-    { id: '11', name: 'Fall 2025 EUW', region: 'EUW', game: 'Valorant', description: 'The fall competition for EUW region.', teams: ['Team X', 'Team Y', 'Team Z'] },
-  ]);
+  const [compData, setCompData] = useState({ series: [], totalPages: 0 });
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await comp_service.getAllCompData(currentPage);
+        setCompData(data);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des données d'équipe :", error);
+        setCompData({ series: [], totalPages: 0 });
+      }
+    };
+
+    fetchData();
+  }, [currentPage]);
 
   const [search, setSearch] = useState("");
   const [region, setRegion] = useState("");
@@ -112,6 +117,11 @@ const ListCompScreen = () => {
           keyExtractor={item => item.id}
         />
       </View>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={compData.totalPages}
+        onPageChange={setCurrentPage}
+      />
     </View>
   );
 };
