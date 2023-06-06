@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, TextInput, StyleSheet, Dimensions, FlatList, Image } from "react-native";
 import {comp_service} from "../services/comp.service";
 import Pagination from "./pagination/Pagination";
+import { RadioButton } from 'react-native-paper';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -68,15 +69,25 @@ const ListCompScreen = ({ navigation }) => {
 
             <View style={styles.filters}>
                 <View style={styles.filterRow}>
-                    <TouchableOpacity onPress={() => handleGameChange('LoL')}>
-                        <Text>{game === 'LoL' ? '✅' : ''} League of Legends</Text>
-                    </TouchableOpacity>
+                    <View style={styles.row}>
+                    <Text>League of Legends</Text>
+                    <RadioButton
+                        value="LoL"
+                        status={ game === 'LoL' ? 'checked' : 'unchecked' }
+                        onPress={() => handleGameChange('LoL')}
+                    />
+                    </View>
 
-                    <TouchableOpacity onPress={() => handleGameChange('Valorant')}>
-                        <Text>{game === 'Valorant' ? '✅' : ''} Valorant</Text>
-                    </TouchableOpacity>
+                    <View style={styles.row}>
+                    <Text>Valorant</Text>
+                    <RadioButton
+                        value="Valorant"
+                        status={ game === 'Valorant' ? 'checked' : 'unchecked' }
+                        onPress={() => handleGameChange('Valorant')}
+                    />
+                    </View>
                 </View>
-            </View>
+                </View>
             {compData.series.length > 0 ? (
                 <FlatList
                     data={filteredCompetitions}
@@ -153,6 +164,11 @@ const styles = StyleSheet.create({
         fontSize: 20,
         textAlign: 'center',
     },
+    row: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    
 });
 
 export default ListCompScreen;

@@ -1,7 +1,6 @@
 import React, { useState , useEffect } from "react";
 import { View, Text, TouchableOpacity, TextInput, StyleSheet, Dimensions, FlatList, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { RadioButton } from 'react-native-paper';
 import { team_service } from "../services/teams.service";
 import Pagination from "./pagination/Pagination";
 
@@ -9,123 +8,128 @@ import Pagination from "./pagination/Pagination";
 const EquipeScreen = () => {
   const navigation = useNavigation();
 
-  const [teamData, setTeamData] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(0);
+  const [teamData, setTeamData] = useState({teams: [], totalPages: 0});
+  const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {
         const fetchTeamData = async () => {
-            try {
-                const { teams, totalPages } = await team_service.getAllTeamsData(
-                    currentPage
-                );
-                setTeamData(teams);
-                setTotalPages(totalPages);
-            } catch (error) {
-                console.error(
-                    "Erreur lors de la récupération des données d'équipe :",
-                    error
-                );
-                setTeamData([]);
-                setTotalPages(0);
-            }
+            
+          const data  = await team_service.getAllTeamsData(currentPage);
+          setTeamData(data);
         };
 
         fetchTeamData();
-    }, [currentPage]);
+    });
 
-    const handlePageChange = (pageNumber) => {
-        setCurrentPage(pageNumber);
+    const [search, setSearch] = useState("");
+    const [game, setGame] = useState("");
+
+    const handleSearchChange = (value) => {
+        setSearch(value);
     };
 
+    const filteredCompetitions = teamData.teams.filter(team => {
+      const name = `${team.name} `
+      const matchesSearch = !search || name.toLowerCase().includes(search.toLowerCase());
+      return matchesSearch;
+  });
+
+  const renderItem = ({ item }) => (
+    <TouchableOpacity
+        key={item.id}
+        style={styles.competitionBox}
+        onPress={() => navigation.navigate('EquipeDetails', { team: item })}
+    >
+        <View style={styles.itemContainer}>
+            <Image source={{ uri: item.imageUrl }} style={styles.image}/>
+            <Text style={styles.fullName}>{`${item.name}`}</Text>
+        </View>
+    </TouchableOpacity>
+);
 
   return (
     <View style={styles.container}>
-        <Text style={styles.title}>Liste des équipes</Text>
-        <View style={styles.table}>
+        <TextInput
+            value={search}
+            onChangeText={handleSearchChange}
+            placeholder="Search competitions"
+        />
+        {teamData.teams.length > 0 ? (
             <FlatList
-                data={teamData}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={({item}) => (
-                    <TouchableOpacity
-                        style={styles.row}
-                        onPress={() => navigation.navigate('EquipeDetails', {team: item})}
-                    >
-                        <Image
-                            style={styles.image}
-                            source={{uri: item.imageUrl}}
-                        />
-                        <Text style={styles.teamName}>{item.name}</Text>
-                    </TouchableOpacity>
-                )}
+                data={filteredCompetitions}
+                renderItem={renderItem}
+                keyExtractor={item => item.id}
             />
-        </View>
+        ) : (
+            <View style={styles.noDataContainer}>
+                <Text>No data available</Text>
+            </View>
+        )}
         <Pagination
             currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
+            totalPages={teamData.totalPages}
+            onPageChange={setCurrentPage}
         />
     </View>
-  );
+);
 };
 
-
 const styles = StyleSheet.create({
-  container: {
+container: {
     flex: 1,
-  },
-  header: {
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    backgroundColor: '#FFF',
-    elevation: 2,
-    borderTopWidth: 1,
-    borderTopColor: '#DDD',
-  },
-  textInput: {
-    height: 40,
-    paddingHorizontal: 10,
-  },
-
-  filters: {
-    flexDirection: 'column',
+},
+loadingContainer: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  filterRow: {
+},
+noDataContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+},
+competitionBox: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  filterText: {
-    marginLeft: 0,
-  },
-  listContainer: {
-    flex: 1,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-  },
-
-  equipeBox: {
-    height: Dimensions.get('window').height * 0.10, // 10% of screen height
     backgroundColor: '#FFF',
-    justifyContent: 'center',
-    alignItems: 'center',
     borderRadius: 5,
     margin: 10,
+    padding: 10,
     shadowColor: "#000",
     shadowOffset: {
-      width: 0,
-      height: 2,
+        width: 0,
+        height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-  },
-  image: {
-    width: Dimensions.get('window').height * 0.10, // 10% of screen height
-    height: Dimensions.get('window').height * 0.10, // 10% of screen height
+},
+filters: {
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    margin: 10,
+},
+filterRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+},
+itemContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+},
+image: {
+    width: Dimensions.get('window').width * 0.2,
+    height: Dimensions.get('window').width * 0.2,
+    resizeMode: 'contain',
     marginRight: 10,
-  },
+},
+fullName: {
+    flex: 1,
+    fontSize: 20,
+    textAlign: 'center',
+},
 });
 
 export default EquipeScreen;
