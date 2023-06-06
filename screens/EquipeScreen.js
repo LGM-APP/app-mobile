@@ -1,107 +1,74 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, TextInput, StyleSheet, Dimensions, FlatList } from "react-native";
+import React, { useState , useEffect } from "react";
+import { View, Text, TouchableOpacity, TextInput, StyleSheet, Dimensions, FlatList, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { RadioButton } from 'react-native-paper';
+import { team_service } from "../services/teams.service";
+import Pagination from "./pagination/Pagination";
+
 
 const EquipeScreen = () => {
   const navigation = useNavigation();
 
-  const [equipes, setEquipes] = useState([
-    { id: '1', name: 'Team 1', region: 'EUW', game: 'League of Legends', description: 'The first team in EUW region.', players: ['Player 1', 'Player 2', 'Player 3'] },
-    { id: '2', name: 'Team 2', region: 'NA', game: 'League of Legends', description: 'The second team in NA region.', players: ['Player A', 'Player B', 'Player C']},
-    { id: '3', name: 'Team 3', region: 'EUW', game: 'Valorant', description: 'The third team in EUW region.', players: ['Player X', 'Player Y', 'Player Z'] },
-    { id: '4', name: 'Team 4', region: 'NA', game: 'Valorant', description: 'The fourth team in NA region.', players: ['Player Alpha', 'Player Beta', 'Player Gamma'] },
-  ]);
+  const [teamData, setTeamData] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
 
-  const [search, setSearch] = useState("");
-  const [region, setRegion] = useState("");
-  const [game, setGame] = useState("");
+    useEffect(() => {
+        const fetchTeamData = async () => {
+            try {
+                const { teams, totalPages } = await team_service.getAllTeamsData(
+                    currentPage
+                );
+                setTeamData(teams);
+                setTotalPages(totalPages);
+            } catch (error) {
+                console.error(
+                    "Erreur lors de la récupération des données d'équipe :",
+                    error
+                );
+                setTeamData([]);
+                setTotalPages(0);
+            }
+        };
 
-  const handleSearchChange = (value) => {
-    setSearch(value);
-  };
+        fetchTeamData();
+    }, [currentPage]);
 
-  const handleRegionChange = (newRegion) => {
-    setRegion(prevRegion => prevRegion === newRegion ? "" : newRegion);
-  };
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
 
-  const handleGameChange = (newGame) => {
-    setGame(prevGame => prevGame === newGame ? "" : newGame);
-  };
-
-  const filteredEquipes = equipes.filter(equipe => {
-    const matchesSearch = !search || equipe.name.toLowerCase().includes(search.toLowerCase());
-    const matchesRegion = !region || equipe.region === region;
-    const matchesGame = !game || equipe.game === game;
-
-    return matchesSearch && matchesRegion && matchesGame;
-  });
-
-  const renderItem = ({ item }) => (
-    <TouchableOpacity
-      key={item.id}
-      style={styles.equipeBox}
-      onPress={() => navigation.navigate('EquipeDetails', { team: item })}
-    >
-      <Text>{item.name}</Text>
-    </TouchableOpacity>
-  );
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TextInput
-          style={styles.textInput}
-          value={search}
-          onChangeText={handleSearchChange}
-          placeholder="Search teams..."
-        />
-      </View>
-
-      <View style={styles.filters}>
-        <View style={styles.filterRow}>
-          <RadioButton.Android
-            value="League of Legends"
-            status={game === 'League of Legends' ? 'checked' : 'unchecked'}
-            onPress={() => handleGameChange('League of Legends')}
-          />
-          <Text style={styles.filterText}>League of Legends</Text>
-
-          <RadioButton.Android
-            value="Valorant"
-            status={game === 'Valorant' ? 'checked' : 'unchecked'}
-            onPress={() => handleGameChange('Valorant')}
-          />
-          <Text style={styles.filterText}>Valorant</Text>
+        <Text style={styles.title}>Liste des équipes</Text>
+        <View style={styles.table}>
+            <FlatList
+                data={teamData}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({item}) => (
+                    <TouchableOpacity
+                        style={styles.row}
+                        onPress={() => navigation.navigate('EquipeDetails', {team: item})}
+                    >
+                        <Image
+                            style={styles.image}
+                            source={{uri: item.imageUrl}}
+                        />
+                        <Text style={styles.teamName}>{item.name}</Text>
+                    </TouchableOpacity>
+                )}
+            />
         </View>
-
-        <View style={styles.filterRow}>
-          <RadioButton.Android
-            value="EUW"
-            status={region === 'EUW' ? 'checked' : 'unchecked'}
-            onPress={() => handleRegionChange('EUW')}
-          />
-          <Text style={styles.filterText}>EUW</Text>
-
-          <RadioButton.Android
-            value="NA"
-            status={region === 'NA' ? 'checked' : 'unchecked'}
-            onPress={() => handleRegionChange('NA')}
-          />
-          <Text style={styles.filterText}>NA</Text>
-        </View>
-      </View>
-
-      <View style={styles.listContainer}>
-        <FlatList
-          data={filteredEquipes}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
+        <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
         />
-      </View>
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
@@ -153,6 +120,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+  },
+  image: {
+    width: Dimensions.get('window').height * 0.10, // 10% of screen height
+    height: Dimensions.get('window').height * 0.10, // 10% of screen height
+    marginRight: 10,
   },
 });
 
