@@ -3,18 +3,11 @@ import { View, Text, TouchableOpacity, TextInput, StyleSheet, Dimensions, FlatLi
 import {comp_service} from "../services/comp.service";
 import Pagination from "./pagination/Pagination";
 
-const ITEMS_PER_PAGE = 5;
+const ITEMS_PER_PAGE = 10;
 
 const ListCompScreen = ({ navigation }) => {
     const [compData, setCompData] = useState({series: [], totalPages: 0});
     const [currentPage, setCurrentPage] = useState(1);
-
-    const totalPages = Math.ceil(compData.series.length / ITEMS_PER_PAGE);
-
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    const endIndex = startIndex + ITEMS_PER_PAGE;
-
-    const currentItems = compData.series.slice(startIndex, endIndex);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -44,7 +37,7 @@ const ListCompScreen = ({ navigation }) => {
         )
     }
 
-    const filteredCompetitions = currentItems.filter(competition => {
+    const filteredCompetitions = compData.series.filter(competition => {
         const name = `${competition.leagueId.name} ${competition.fullName}`
         const matchesSearch = !search || name.toLowerCase().includes(search.toLowerCase());
         const matchesGame = !game || competition.leagueId.videoGame.name === game;
@@ -97,7 +90,7 @@ const ListCompScreen = ({ navigation }) => {
             )}
             <Pagination
                 currentPage={currentPage}
-                totalPages={totalPages}
+                totalPages={compData.totalPages}
                 onPageChange={setCurrentPage}
             />
         </View>
@@ -152,7 +145,7 @@ const styles = StyleSheet.create({
     image: {
         width: Dimensions.get('window').width * 0.2,
         height: Dimensions.get('window').width * 0.2,
-        resizeMode: 'cover',
+        resizeMode: 'contain',
         marginRight: 10,
     },
     fullName: {
