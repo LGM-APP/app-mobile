@@ -79,11 +79,14 @@ const HomeScreen = () => {
 
   const handleValidateBet = () => {
     console.log("Bet validated with the following cart: ", cart);
-    console.log("Bet validated with the following cart: ", cart);
+    const potentialWin = calculatePotentialWin();
+    alert(`Vous avez validé votre pari. Votre gain potentiel est de ${potentialWin} euros.`);
+    console.log("Gain potentiel: ", potentialWin );
     // Ajoutez ici la logique nécessaire pour valider le pari
     // Par exemple, vous pouvez envoyer cette information à une API
     handleClearCart(); // vider le panier après la validation
   };
+
 
   return (
     <View style={styles.container}>
