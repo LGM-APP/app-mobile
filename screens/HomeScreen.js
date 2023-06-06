@@ -77,6 +77,12 @@ const HomeScreen = () => {
     return (betAmount * totalOdds).toFixed(1);
   };
 
+  const handleValidateBet = () => {
+    console.log("Bet validated with the following cart: ", cart);
+    // Ajoutez ici la logique nécessaire pour valider le pari
+    // Par exemple, vous pouvez envoyer cette information à une API
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
@@ -127,9 +133,14 @@ const HomeScreen = () => {
             </View>
           ))}
           {cart.length > 0 && (
-            <TouchableOpacity style={styles.clearCartButton} onPress={handleClearCart}>
-              <Text style={styles.clearCartButtonText}>Vider le panier</Text>
-            </TouchableOpacity>
+            <>
+              <TouchableOpacity style={styles.clearCartButton} onPress={handleClearCart}>
+                <Text style={styles.clearCartButtonText}>Vider le panier</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.validateBetButton} onPress={handleValidateBet}>
+                <Text style={styles.validateBetButtonText}>Valider le pari</Text>
+              </TouchableOpacity>
+            </>
           )}
           <View style={styles.totalContainer}>
             <Text style={styles.totalText}>Cote totale :</Text>
@@ -280,6 +291,17 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 5,
     textAlign: "center",
+  },
+  validateBetButton: {
+    backgroundColor: "#0d3948",
+    borderRadius: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    alignSelf: "flex-end",
+    marginTop: 10, // Ajout d'une marge pour séparer les boutons
+  },
+  validateBetButtonText: {
+    color: "#fff",
   },
 });
 
