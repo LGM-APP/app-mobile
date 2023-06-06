@@ -1,180 +1,166 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, TextInput, StyleSheet, Dimensions, FlatList } from "react-native";
-import { RadioButton } from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, TouchableOpacity, TextInput, StyleSheet, Dimensions, FlatList, Image } from "react-native";
+import {comp_service} from "../services/comp.service";
 import Pagination from "./pagination/Pagination";
 
+const ITEMS_PER_PAGE = 5;
 
-const ListCompScreen = () => {
-  const [compData, setCompData] = useState({ series: [], totalPages: 0 });
-  const [currentPage, setCurrentPage] = useState(1);
+const ListCompScreen = ({ navigation }) => {
+    const [compData, setCompData] = useState({series: [], totalPages: 0});
+    const [currentPage, setCurrentPage] = useState(1);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await comp_service.getAllCompData(currentPage);
-        setCompData(data);
-      } catch (error) {
-        console.error("Erreur lors de la récupération des données d'équipe :", error);
-        setCompData({ series: [], totalPages: 0 });
-      }
+    const totalPages = Math.ceil(compData.series.length / ITEMS_PER_PAGE);
+
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+
+    const currentItems = compData.series.slice(startIndex, endIndex);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await comp_service.getAllCompData(1);
+            setCompData(data);
+        };
+
+        fetchData();
+    }, []);
+
+    const [search, setSearch] = useState("");
+    const [game, setGame] = useState("");
+
+    const handleSearchChange = (value) => {
+        setSearch(value);
     };
 
-    fetchData();
-  }, [currentPage]);
-
-  const [search, setSearch] = useState("");
-  const [region, setRegion] = useState("");
-  const [game, setGame] = useState("");
-
-  const handleSearchChange = (value) => {
-    setSearch(value);
-  };
-
-  const handleRegionChange = (newRegion) => {
-    setRegion(prevRegion => prevRegion === newRegion ? "" : newRegion);
-  };
-
-  const handleGameChange = (newGame) => {
-    setGame(prevGame => prevGame === newGame ? "" : newGame);
-  };
-
-  const filteredCompetitions = competitions.filter(competition => {
-    const matchesSearch = !search || competition.name.toLowerCase().includes(search.toLowerCase());
-    const matchesRegion = !region || competition.region === region;
-    const matchesGame = !game || competition.game === game;
-
-    return matchesSearch && matchesRegion && matchesGame;
-  });
-
-  const navigation = useNavigation();
-
-  const renderItem = ({ item }) => {
-    const handleTeamPress = () => {
-      navigation.navigate('CompetitionDetails', { competition: item });
+    const handleGameChange = (newGame) => {
+        setGame(prevGame => prevGame === newGame ? "" : newGame);
     };
+
+    if (compData.series.length === 0) {
+        return (
+            <View style={styles.loadingContainer}>
+                <Text>Loading...</Text>
+            </View> 
+        )
+    }
+
+    const filteredCompetitions = currentItems.filter(competition => {
+        const name = `${competition.leagueId.name} ${competition.fullName}`
+        const matchesSearch = !search || name.toLowerCase().includes(search.toLowerCase());
+        const matchesGame = !game || competition.leagueId.videoGame.name === game;
+
+        return matchesSearch && matchesGame;
+    });
+
+    const renderItem = ({ item }) => (
+        <TouchableOpacity
+            key={item.id}
+            style={styles.competitionBox}
+            onPress={() => navigation.navigate('CompetitionDetails', { competition: item })}
+        >
+            <View style={styles.itemContainer}>
+                <Image source={{ uri: item.leagueId.imageUrl }} style={styles.image}/>
+                <Text style={styles.fullName}>{`${item.leagueId.name} ${item.fullName}`}</Text>
+            </View>
+        </TouchableOpacity>
+    );
 
     return (
-      <TouchableOpacity
-        key={item.id}
-        style={styles.competitionBox}
-        onPress={handleTeamPress}
-      >
-        <Text>{item.name}</Text>
-      </TouchableOpacity>
+        <View style={styles.container}>
+            <TextInput
+                value={search}
+                onChangeText={handleSearchChange}
+                placeholder="Search competitions"
+            />
+
+            <View style={styles.filters}>
+                <View style={styles.filterRow}>
+                    <TouchableOpacity onPress={() => handleGameChange('LoL')}>
+                        <Text>{game === 'LoL' ? '✅' : ''} League of Legends</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={() => handleGameChange('Valorant')}>
+                        <Text>{game === 'Valorant' ? '✅' : ''} Valorant</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+            {compData.series.length > 0 ? (
+                <FlatList
+                    data={filteredCompetitions}
+                    renderItem={renderItem}
+                    keyExtractor={item => item.id}
+                />
+            ) : (
+                <View style={styles.noDataContainer}>
+                    <Text>No data available</Text>
+                </View>
+            )}
+            <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+            />
+        </View>
     );
-  };
-
-  return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <TextInput
-          style={styles.textInput}
-          value={search}
-          onChangeText={handleSearchChange}
-          placeholder="Search competitions"
-        />
-      </View>
-
-      <View style={styles.filters}>
-        <View style={styles.filterRow}>
-          <RadioButton.Android
-            value="League of Legends"
-            status={game === 'League of Legends' ? 'checked' : 'unchecked'}
-            onPress={() => handleGameChange('League of Legends')}
-          />
-          <Text style={styles.filterText}>LOL</Text>
-
-          <RadioButton.Android
-            value="Valorant"
-            status={game === 'Valorant' ? 'checked' : 'unchecked'}
-            onPress={() => handleGameChange('Valorant')}
-          />
-          <Text style={styles.filterText}>Valorant</Text>
-        </View>
-
-        <View style={styles.filterRow}>
-          <RadioButton.Android
-            value="EUW"
-            status={region === 'EUW' ? 'checked' : 'unchecked'}
-            onPress={() => handleRegionChange('EUW')}
-          />
-          <Text style={styles.filterText}>EUW</Text>
-
-          <RadioButton.Android
-            value="NA"
-            status={region === 'NA' ? 'checked' : 'unchecked'}
-            onPress={() => handleRegionChange('NA')}
-          />
-          <Text style={styles.filterText}>NA</Text>
-        </View>
-      </View>
-
-      <View style={styles.listContainer}>
-        <FlatList
-          data={filteredCompetitions}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
-        />
-      </View>
-      <Pagination
-        currentPage={currentPage}
-        totalPages={compData.totalPages}
-        onPageChange={setCurrentPage}
-      />
-    </View>
-  );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  header: {
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    backgroundColor: '#fff',
-    elevation: 2,
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
-  },
-  textInput: {
-    height: 40,
-    paddingHorizontal: 10,
-  },
-  filters: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  filterRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  filterText: {
-    marginLeft: 8,
-  },
-  listContainer: {
-    flex: 1,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-  },
-  competitionBox: {
-    height: Dimensions.get('window').height * 0.1,
-    backgroundColor: '#FFF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 5,
-    marginVertical: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
+    container: {
+        flex: 1,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    noDataContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    competitionBox: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#FFF',
+        borderRadius: 5,
+        margin: 10,
+        padding: 10,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+    filters: {
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+        margin: 10,
+    },
+    filterRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+    },
+    itemContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    image: {
+        width: Dimensions.get('window').width * 0.2,
+        height: Dimensions.get('window').width * 0.2,
+        resizeMode: 'cover',
+        marginRight: 10,
+    },
+    fullName: {
+        flex: 1,
+        fontSize: 20,
+        textAlign: 'center',
+    },
 });
 
 export default ListCompScreen;
+

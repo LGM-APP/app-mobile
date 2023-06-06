@@ -1,12 +1,45 @@
 // CompetitionDetails.js
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import React,{useState, useEffect} from "react";
+import {View, Text, FlatList, Image, StyleSheet} from "react-native";
+import { series_service } from "../services/series.service";
+import { matchs_service } from "../services/matchs.service";
+
+
 
 const CompetitionDetails = ({ route }) => {
   const { competition } = route.params;
+  const { id } = competition;
+  const [tournaments, setTournaments] = useState([]);
 
-  const navigation = useNavigation();
+
+    useEffect(() => {
+        const fetchTournamentData = async () => {
+            const tournamentData = await series_service.getTournamentBySerieId(id);
+            const tournamentsData = await Promise.all(
+                tournamentData.data.map(async (tournament) => {
+                    const matchsData = await matchs_service.getMatchsByTournamentId(
+                        tournament.id
+                    );
+                    return {
+                        id: tournament.id,
+                        logo: tournament.serie.leagueId.imageUrl,
+                        name: tournament.name,
+                        league_name:
+                            tournament.serie.leagueId.name +
+                            " " +
+                            tournament.serie.fullName,
+                        begin_at: tournament.beginAt,
+                        end_at: tournament.endAt,
+                        matchs: matchsData,
+                    };
+                })
+            );
+            setTournaments(tournamentsData);
+        };
+
+        fetchTournamentData();
+    }, [id]);
+
 
   if (!competition) {
     return (
@@ -16,45 +49,43 @@ const CompetitionDetails = ({ route }) => {
     );
   }
 
-  const { name, game, region, description, teams } = competition;
-
-  const teamsData = [
-    { id: '1', name: 'Team 1', region: 'EUW', game: 'League of Legends', description: 'The first team in EUW region.', players: ['Player 1', 'Player 2', 'Player 3'] },
-    { id: '2', name: 'Team 2', region: 'NA', game: 'League of Legends', description: 'The second team in NA region.', players: ['Player A', 'Player B', 'Player C']},
-    { id: '3', name: 'Team 3', region: 'EUW', game: 'Valorant', description: 'The third team in EUW region.', players: ['Player X', 'Player Y', 'Player Z'] },
-    { id: '5', name: 'Team Alpha', region: 'EUW', game: 'League of Legends', description: 'The fifth team in EUW region.', players: ['Player 1', 'Player 2', 'Player 3'] },
-    { id: '6', name: 'Team Beta', region: 'NA', game: 'League of Legends', description: 'The sixth team in NA region.', players: ['Player A', 'Player B', 'Player C']},
-    { id: '7', name: 'Team Gamma', region: 'EUW', game: 'Valorant', description: 'The seventh team in EUW region.', players: ['Player X', 'Player Y', 'Player Z'] },
-    { id: '8', name: 'Team A', region: 'NA', game: 'Valorant', description: 'The fourth team in NA region.', players: ['Player Alpha', 'Player Beta', 'Player Gamma'] },
-    { id: '9', name: 'Team B', region: 'EUW', game: 'Valorant', description: 'The fourth team in EUW region.', players: ['Player Delta', 'Player Epsilon', 'Player Zeta'] },
-    { id: '10', name: 'Team C', region: 'EUW', game: 'Valorant', description: 'The fourth team in EUW region.', players: ['Player Delta', 'Player Epsilon', 'Player Zeta'] },
-    { id: '11', name: 'Team X', region: 'EUW', game: 'Valorant', description: 'The fourth team in EUW region.', players: ['Player Delta', 'Player Epsilon', 'Player Zeta'] },
-    { id: '12', name: 'Team Y', region: 'EUW', game: 'Valorant', description: 'The fourth team in EUW region.', players: ['Player Delta', 'Player Epsilon', 'Player Zeta'] },
-    { id: '13', name: 'Team Z', region: 'EUW', game: 'Valorant', description: 'The fourth team in EUW region.', players: ['Player Delta', 'Player Epsilon', 'Player Zeta'] },
-  ];
-
-  const competitionTeams = teamsData.filter(team => teams.includes(team.name));
-
-  const handleTeamPress = (team) => {
-    navigation.navigate('EquipeDetails', { team: team });
-  };  
-
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{name}</Text>
-      <Text style={styles.subtitle}>{game}</Text>
-      <Text style={styles.subtitle}>{region}</Text>
-      <Text style={styles.description}>{description}</Text>
-      <Text style={styles.teamsTitle}>Teams:</Text>
-      {competitionTeams.map((team, index) => (
-        <TouchableOpacity
-          key={index}
-          style={styles.team}
-          onPress={() => handleTeamPress(team)}
-        >
-          <Text>{team.name}</Text>
-        </TouchableOpacity>
-      ))}
+      <Text style={styles.title}>{competition.leagueId.name + " " + competition.fullName}</Text>
+      <Text style={styles.subtitle}>{competition.beginAt}</Text>
+      <Text style={styles.subtitle}>{competition.endAt}</Text>
+      <Text style={styles.subtitle}>{competition.leagueId.videoGame.name}</Text>
+      <View style={styles.container}>
+            <FlatList
+                data={tournaments}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({item}) => (
+                    <View style={styles.tournamentItem}>
+                        <Image
+                            style={styles.tournamentLogo}
+                            source={{uri: item.logo}}
+                        />
+                        <Text style={styles.tournamentName}>{item.name}</Text>
+                        <Text style={styles.tournamentDates}>
+                            Date de début : {item.begin_at}
+                        </Text>
+                        <Text style={styles.tournamentDates}>
+                            Date de fin : {item.end_at}
+                        </Text>
+                        <View style={styles.matchList}>
+                            <Text style={styles.matchListTitle}>
+                                Liste des matchs
+                            </Text>
+                            {item.matchs.map((match) => (
+                                <Text key={match.id} style={styles.matchItem}>
+                                    {match.name}
+                                </Text>
+                            ))}
+                        </View>
+                    </View>
+                )}
+            />
+        </View>
     </View>
   );
 };
