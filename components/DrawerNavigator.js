@@ -4,7 +4,6 @@ import {MaterialCommunityIcons} from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import HomeScreen from '../screens/HomeScreen';
 import SettingScreen from '../screens/SettingScreen';
-import GamesScreen from '../screens/GamesScreen';
 import EquipeScreen from '../screens/EquipeScreen';
 import ListCompScreen from '../screens/ListCompScreen';
 import ProfileScreen from '../screens/ProfileScreen';
@@ -56,16 +55,6 @@ function DrawerNavigator() {
           drawerLabel: 'Equipes',
           drawerIcon: ({ color, size }) => (
             <MaterialIcons name="groups" size={24} color="#5f6368" />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="Mini-Jeux"
-        component={GamesScreen}
-        options={{
-          drawerLabel: 'Mini-Jeux',
-          drawerIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="gamepad-variant" color={color} size={size} />
           ),
         }}
       />
