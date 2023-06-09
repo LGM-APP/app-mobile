@@ -3,7 +3,6 @@ import {createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerIt
 import {MaterialCommunityIcons} from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import HomeScreen from '../screens/HomeScreen';
-import SettingScreen from '../screens/SettingScreen';
 import EquipeScreen from '../screens/EquipeScreen';
 import ListCompScreen from '../screens/ListCompScreen';
 import ProfileScreen from '../screens/ProfileScreen';
@@ -23,7 +22,7 @@ function CustomDrawerContent(props) {
       />
     </DrawerContentScrollView>
   );
-}
+} 
 
 function DrawerNavigator() {
   return (
