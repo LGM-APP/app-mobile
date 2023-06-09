@@ -5,6 +5,7 @@ import { team_service } from "../services/teams.service";
 import Pagination from "./pagination/Pagination";
 
 
+
 const EquipeScreen = () => {
   const navigation = useNavigation();
 
@@ -22,7 +23,6 @@ const EquipeScreen = () => {
     });
 
     const [search, setSearch] = useState("");
-    const [game, setGame] = useState("");
 
     const handleSearchChange = (value) => {
         setSearch(value);

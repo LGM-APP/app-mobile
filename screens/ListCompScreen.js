@@ -4,7 +4,7 @@ import {comp_service} from "../services/comp.service";
 import Pagination from "./pagination/Pagination";
 import { RadioButton } from 'react-native-paper';
 
-const ITEMS_PER_PAGE = 10;
+
 
 const ListCompScreen = ({ navigation }) => {
     const [compData, setCompData] = useState({series: [], totalPages: 0});
@@ -88,18 +88,18 @@ const ListCompScreen = ({ navigation }) => {
                     </View>
                 </View>
                 </View>
-            {compData.series.length > 0 ? (
+                {compData.series.length > 0 ? (
                 <FlatList
                     data={filteredCompetitions}
                     renderItem={renderItem}
                     keyExtractor={item => item.id}
                 />
-            ) : (
+                 ) : (
                 <View style={styles.noDataContainer}>
                     <Text>No data available</Text>
                 </View>
-            )}
-            <Pagination
+                 )}
+                <Pagination
                 currentPage={currentPage}
                 totalPages={compData.totalPages}
                 onPageChange={setCurrentPage}
