@@ -79,16 +79,6 @@ function DrawerNavigator() {
         }}
       />
       <Drawer.Screen
-        name="Paramètres"
-        component={SettingScreen}
-        options={{
-          drawerLabel: 'Paramètres',
-          drawerIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="cog" color={color} size={size} />
-          ),
-        }}
-      />
-      <Drawer.Screen
         name="Inscription"
         component={SignupScreen}
         options={{
