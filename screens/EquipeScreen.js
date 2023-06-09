@@ -52,7 +52,7 @@ const EquipeScreen = () => {
         <TextInput
             value={search}
             onChangeText={handleSearchChange}
-            placeholder="Search competitions"
+            placeholder="Search teams"
         />
         {teamData.teams.length > 0 ? (
             <FlatList
