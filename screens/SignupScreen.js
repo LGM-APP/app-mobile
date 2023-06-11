@@ -23,6 +23,8 @@ const SignupScreen = () => {
     try {
       const response = await auth_service.login(credentials);
       await auth_service.save_token(response.data.accessToken);
+      console.log('Le token sauvegardé est: ', response.data.accessToken);
+      console.log(await auth_service.get_token());
       navigation.navigate("DrawerNavigator");
     } catch (err) {
       console.log(err);

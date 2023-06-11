@@ -22,7 +22,6 @@ const InscriptionScreen = () => {
     }
 
     const handleRegister = async () => {
-        auth_service.register(credentials)
         try {
             const response = await auth_service.register(credentials);
             await auth_service.save_token(response.data.accessToken);

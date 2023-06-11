@@ -28,11 +28,10 @@ const HomeScreen = () => {
   const [betAmount, setBetAmount] = useState("1");
   const [selectedOdds, setSelectedOdds] = useState({});
 
-  const handleOddsPress = (id, team, odds) => {
-    console.log("Odds pressed for", team, "with odds", odds, "for match id", id);
+  const handleOddsPress = (id, team, odds, match_name, team_name) => {
     setSelectedOdds((prevState) => ({ ...prevState, [`${id}-${team}`]: !prevState[`${id}-${team}`] }));
     if (!isTeamAlreadyInCart(id, team)) {
-      setCart([...cart, { id, team, odds }]);
+      setCart([...cart, { id, team, odds, match_name, team_name }]);
     }
   };
 
@@ -83,7 +82,6 @@ const HomeScreen = () => {
   const handleValidateBet = () => {
     
     cart.forEach((bet) => {
-      console.log(bet);
       bet_service
         .addBet({
           matchID: bet.id,
@@ -121,7 +119,7 @@ const HomeScreen = () => {
                 styles.oddsButton,
                 selectedOdds[`${match.id}-${match.home.id}`] && { backgroundColor: "#0a0836" },
               ]}
-              onPress={() => handleOddsPress(match.id, match.home.id, match.odds1)}
+              onPress={() => handleOddsPress(match.id, match.home.id, match.homeOdd,  match.name ,match.home.name)}
               disabled={isTeamAlreadyInCart(match.id, match.home.id)}
             >
               <Text style={styles.oddsButtonText}>{match.homeOdd}</Text>
@@ -132,7 +130,7 @@ const HomeScreen = () => {
                 styles.oddsButton,
                 selectedOdds[`${match.id}-${match.away.id}`] && { backgroundColor: "#0a0836" },
               ]}
-              onPress={() => handleOddsPress(match.id, match.away.id, match.odds2)}
+              onPress={() => handleOddsPress(match.id, match.away.id, match.awayOdd, match.name, match.away.name)}
               disabled={isTeamAlreadyInCart(match.id, match.away.id)}
             >
               <Text style={styles.oddsButtonText}>{match.awayOdd}</Text>
@@ -150,7 +148,7 @@ const HomeScreen = () => {
           {cart.map((item, index) => (
             <View key={index} style={styles.cartItem}>
               <Text style={styles.cartItemText}>
-                Match {item.id}: {item.team} - Cote: {item.odds}
+                Match {item.match_name}: {item.team_name} - Cote: {item.odds}
               </Text>
               <TouchableOpacity style={styles.removeButton} onPress={() => handleRemoveFromCart(index)}>
                 <Text style={styles.removeButtonText}>Supprimer</Text>
