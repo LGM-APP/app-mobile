@@ -25,7 +25,7 @@ const SignupScreen = () => {
     auth_service.login(credentials)
       .then(response => {
         auth_service.save_token(response.data.accessToken);
-        navigation.navigate("HomeScreen");
+        navigation.navigate("DrawerNavigator");
       })
       .catch(err => console.log(err))
   }
@@ -34,7 +34,7 @@ const SignupScreen = () => {
     <View style={styles.container}>
       <View style={styles.content}>
         <View style={styles.textCenter}>
-          <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')}>
+          <TouchableOpacity onPress={() => navigation.navigate('DrawerNavigator')}>
             <Image source={{ logo }} style={styles.logo} />
           </TouchableOpacity>
           <View style={styles.spaceY}>
