@@ -19,15 +19,14 @@ const SignupScreen = () => {
     })
   }
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-
-    auth_service.login(credentials)
-      .then(response => {
-        auth_service.save_token(response.data.accessToken);
-        navigation.navigate("DrawerNavigator");
-      })
-      .catch(err => console.log(err))
+  const handleLogin = async () => {
+    try {
+      const response = await auth_service.login(credentials);
+      await auth_service.save_token(response.data.accessToken);
+      navigation.navigate("DrawerNavigator");
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   return (

@@ -5,7 +5,7 @@ import {View, Text, TextInput, TouchableOpacity, StyleSheet, Image} from 'react-
 
 const InscriptionScreen = () => {
     const navigation = useNavigation();
-    const logo = 'chemin_vers_votre_logo';
+    const logo = 'public/logo.png';
 
     const [credentials, setCredentials] = useState({
         "firstName": "",
@@ -21,13 +21,15 @@ const InscriptionScreen = () => {
         })
     }
 
-    const handleRegister = () => {
+    const handleRegister = async () => {
         auth_service.register(credentials)
-            .then(response => {
-                auth_service.save_token(response.data.accessToken);
-                navigation.navigate('SignupScreen'); // Assurez-vous que vous avez une route nommée 'Login'
-            })
-            .catch(err => console.log(err))
+        try {
+            const response = await auth_service.register(credentials);
+            await auth_service.save_token(response.data.accessToken);
+            navigation.navigate('DrawerNavigator');
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     return (
@@ -37,7 +39,7 @@ const InscriptionScreen = () => {
             </TouchableOpacity>
             <Text style={styles.title}>Créer un compte</Text>
             <Text>Vous avez déjà un compte ?
-                <Text style={styles.link} onPress={() => navigation.navigate('SignupScreen')}>Connectez-vous</Text>
+                <Text style={styles.link} onPress={() => navigation.navigate('SignupScreen')}> Connectez-vous</Text>
             </Text>
             <View style={styles.form}>
                 <Text>Prénom</Text>
