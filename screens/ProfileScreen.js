@@ -70,15 +70,15 @@ const ProfileScreen = () => {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		flexDirection: 'row',
+		flexDirection: 'column',
 	},
 	userBox: {
-		flex: 1,
+		flex: 0.2, // 20% of the height
 		backgroundColor: '#E5E7EB',
 		padding: 16,
 	},
 	betBox: {
-		flex: 1,
+		flex: 0.8, // 80% of the height
 		backgroundColor: '#F3F4F6',
 		padding: 16,
 	},
