@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { auth_service } from "../services/auth.service";
@@ -17,7 +17,7 @@ const SignupScreen = () => {
   const handleChanges = (name, value) => {
     setCredentials({
       ...credentials,
-      [name]: value
+      [name]: value,
     });
   };
 
@@ -32,6 +32,18 @@ const SignupScreen = () => {
     }
   };
 
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      setIncorrectPassword(false);
+      setCredentials({
+        email: "",
+        password: "",
+      });
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
   return (
     <View style={styles.container}>
       <View style={styles.content}>
@@ -40,10 +52,10 @@ const SignupScreen = () => {
           <View style={styles.spaceY}>
             <Text style={styles.title}>Connectez-vous à votre compte</Text>
             <Text>
-              Vous n'avez pas encore de compte ?{' '}
+              Vous n'avez pas encore de compte ?{" "}
               <Text
                 style={styles.link}
-                onPress={() => navigation.navigate('InscriptionScreen')}
+                onPress={() => navigation.navigate("InscriptionScreen")}
               >
                 Inscrivez-vous
               </Text>
@@ -129,9 +141,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: 150,
-    height: 150
-
-,
+    height: 150,
     resizeMode: "contain",
   },
   incorrectPasswordText: {
