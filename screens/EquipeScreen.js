@@ -53,6 +53,7 @@ const EquipeScreen = () => {
             value={search}
             onChangeText={handleSearchChange}
             placeholder="Search teams"
+            style={styles.searchInput}
         />
         {teamData.teams.length > 0 ? (
             <FlatList
@@ -130,6 +131,23 @@ fullName: {
     fontSize: 20,
     textAlign: 'center',
 },
+searchInput: {
+    height: 40,
+    borderColor: '#000',
+    borderWidth: 1,
+    borderRadius: 8,
+    margin: 10,
+    paddingLeft: 10,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+        width: 0,
+        height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+}, 
 });
 
 export default EquipeScreen;
