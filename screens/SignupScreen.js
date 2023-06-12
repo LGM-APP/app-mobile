@@ -8,16 +8,18 @@ const SignupScreen = () => {
   const navigation = useNavigation();
 
   const [credentials, setCredentials] = useState({
-    "email": "",
-    "password": "",
+    email: "",
+    password: "",
   });
+
+  const [incorrectPassword, setIncorrectPassword] = useState(false);
 
   const handleChanges = (name, value) => {
     setCredentials({
       ...credentials,
       [name]: value
-    })
-  }
+    });
+  };
 
   const handleLogin = async () => {
     try {
@@ -26,8 +28,9 @@ const SignupScreen = () => {
       navigation.navigate("DrawerNavigator");
     } catch (err) {
       console.log(err);
+      setIncorrectPassword(true);
     }
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -52,7 +55,7 @@ const SignupScreen = () => {
           <TextInput
             style={styles.input}
             name="email"
-            onChangeText={value => handleChanges("email", value)}
+            onChangeText={(value) => handleChanges("email", value)}
             value={credentials.email}
             keyboardType="email-address"
             autoCapitalize="none"
@@ -61,10 +64,13 @@ const SignupScreen = () => {
           <TextInput
             style={styles.input}
             name="password"
-            onChangeText={value => handleChanges("password", value)}
+            onChangeText={(value) => handleChanges("password", value)}
             value={credentials.password}
             secureTextEntry={true}
           />
+          {incorrectPassword && (
+            <Text style={styles.incorrectPasswordText}>Mot de passe incorrect</Text>
+          )}
           <TouchableOpacity style={styles.button} onPress={handleLogin}>
             <Text style={styles.buttonText}>Connexion</Text>
           </TouchableOpacity>
@@ -77,54 +83,60 @@ const SignupScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 16,
   },
   content: {
     maxWidth: 360,
-    width: '100%',
+    width: "100%",
   },
   textCenter: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   spaceY: {
     marginTop: 20,
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   link: {
-    color: '#069',
+    color: "#069",
   },
   form: {
     marginTop: 32,
   },
   input: {
     height: 40,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderWidth: 1,
     marginTop: 8,
     paddingHorizontal: 8,
     borderRadius: 8,
   },
   button: {
-    backgroundColor: '#069',
+    backgroundColor: "#069",
     marginTop: 16,
     padding: 12,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
   },
   buttonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   logo: {
     width: 150,
-    height: 150,
-    resizeMode: 'contain',
+    height: 150
+
+,
+    resizeMode: "contain",
+  },
+  incorrectPasswordText: {
+    color: "red",
+    marginTop: 5,
   },
 });
 
