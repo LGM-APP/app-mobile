@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { auth_service } from "../services/auth.service";
+import logoImage from "../public/logo.png"; // Importation de l'image du logo
 
 const SignupScreen = () => {
   const navigation = useNavigation();
-  const logo = "../public/logo.png";
 
   const [credentials, setCredentials] = useState({
     "email": "",
@@ -35,9 +35,7 @@ const SignupScreen = () => {
     <View style={styles.container}>
       <View style={styles.content}>
         <View style={styles.textCenter}>
-          <TouchableOpacity onPress={() => navigation.navigate('DrawerNavigator')}>
-            <Image source={{ logo }} style={styles.logo} />
-          </TouchableOpacity>
+          <Image source={logoImage} style={styles.logo} />
           <View style={styles.spaceY}>
             <Text style={styles.title}>Connectez-vous à votre compte</Text>
             <Text>
