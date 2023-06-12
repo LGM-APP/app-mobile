@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, StyleSheet, ActivityIndicator } from "react-native";
 import { bet_service } from "../services/bet.service";
 import { user_service } from "../services/user.service";
+import Pagination from "./pagination/Pagination";
+
 
 const ProfileScreen = () => {
   const [userData, setUserData] = useState(null);
   const [betList, setBetList] = useState([]);
-  const [rankList, setrankList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -18,9 +20,6 @@ const ProfileScreen = () => {
         const betData = await bet_service.getBet(1);
         setBetList(betData.data);
 
-        const rankData = await user_service.getUsersRanking();
-        setrankList(rankData);
-        
         setLoading(false);
       } catch (error) {
         console.error("Erreur lors de la récupération des données :", error);
@@ -60,17 +59,18 @@ const ProfileScreen = () => {
       <View style={styles.betBox}>
         <Text style={styles.header}>Liste des paris</Text>
         {betList.series && betList.series.length > 0 ? (
+          <View>
           <FlatList
             data={betList.series}
             keyExtractor={(bet) => bet.id.toString()}
             renderItem={({ item: bet }) => (
               <View>
                 <Text>
-                  <Text style={styles.bold}>Match ID :</Text> {bet.matchId}
+                  <Text style={styles.bold}>Match ID :</Text> {bet.matchId.name}
                 </Text>
                 <Text>
                   <Text style={styles.bold}>Bet Team ID :</Text>{" "}
-                  {bet.betTeamId}
+                  {bet.betTeamId.name}
                 </Text>
                 <Text>
                   <Text style={styles.bold}>Montant :</Text> {bet.amount}
@@ -81,6 +81,12 @@ const ProfileScreen = () => {
               </View>
             )}
           />
+          <Pagination
+                currentPage={currentPage}
+                totalPages={betList.totalPages}
+                onPageChange={setCurrentPage}
+            />
+          </View>
         ) : (<Text>Aucun match disponible</Text>) }
       </View>
     </View>
