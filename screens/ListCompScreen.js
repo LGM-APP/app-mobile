@@ -12,12 +12,12 @@ const ListCompScreen = ({ navigation }) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const data = await comp_service.getAllCompData(1);
+            const data = await comp_service.getAllCompData(currentPage);
             setCompData(data);
         };
 
         fetchData();
-    }, []);
+    });
 
     const [search, setSearch] = useState("");
     const [game, setGame] = useState("");
