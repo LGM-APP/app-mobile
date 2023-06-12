@@ -1,27 +1,31 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput, Alert } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput, Alert, ActivityIndicator } from "react-native";
 import { matchs_service } from "../services/matchs.service";
 import Pagination from "./pagination/Pagination";
 import { bet_service } from "../services/bet.service";
 
 const HomeScreen = () => {
   const [currentPage, setCurrentPage] = useState(1);
-	const [matches, setMatches] = useState([]);
-	const [totalPages, setTotalPages] = useState(0);
+  const [matches, setMatches] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
+  const [isLoading, setIsLoading] = useState(false); // Nouvel état pour le chargement
 
-	useEffect(() => {
-		const fetchMatchData = async () => {
-			try {
-				const data = await matchs_service.getAllMatchs(currentPage);
-				setMatches(data.matchs);
-				setTotalPages(data.totalPages);
-			} catch (error) {
-				console.error(error);
-			}
-		};
+  useEffect(() => {
+    const fetchMatchData = async () => {
+      setIsLoading(true); // Commence le chargement
+      try {
+        const data = await matchs_service.getAllMatchs(currentPage);
+        setMatches(data.matchs);
+        setTotalPages(data.totalPages);
+        setIsLoading(false); // Termine le chargement
+      } catch (error) {
+        console.error(error);
+        setIsLoading(false); // Termine le chargement même en cas d'erreur
+      }
+    };
 
-		fetchMatchData();
-	}, [currentPage]);
+    fetchMatchData();
+  }, [currentPage]);
 
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -119,10 +123,17 @@ const HomeScreen = () => {
     }
   };
 
-  return (
-    <View style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-        {matches.map((match, index) => (
+  if (isLoading) { // Si les données sont en train de charger
+    return (
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color="#374151" /> 
+      </View>
+    );
+  } else { // Si les données ont fini de charger
+    return (
+      <View style={styles.container}>
+        <ScrollView style={styles.scrollView}>
+          {matches.map((match, index) => (
           <View>
             <Text style={styles.compName} >
             {match.tournament && match.tournament.serie.leagueId.name}
@@ -215,7 +226,8 @@ handleBetAmountChange}
 				onPageChange={setCurrentPage}
 			/>
     </View>
-  );
+    );
+  }
 };
 
 const styles = StyleSheet.create({
