@@ -99,6 +99,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     marginBottom: 10,
+    resizeMode: 'contain',
   },
   matchList: {
     width: '100%',
