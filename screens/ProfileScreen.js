@@ -4,7 +4,6 @@ import { bet_service } from "../services/bet.service";
 import { user_service } from "../services/user.service";
 import Pagination from "./pagination/Pagination";
 
-
 const ProfileScreen = () => {
   const [userData, setUserData] = useState(null);
   const [betList, setBetList] = useState([]);
@@ -60,34 +59,36 @@ const ProfileScreen = () => {
         <Text style={styles.header}>Liste des paris</Text>
         {betList.series && betList.series.length > 0 ? (
           <View>
-          <FlatList
-            data={betList.series}
-            keyExtractor={(bet) => bet.id.toString()}
-            renderItem={({ item: bet }) => (
-              <View>
-                <Text>
-                  <Text style={styles.bold}>Match ID :</Text> {bet.matchId.name}
-                </Text>
-                <Text>
-                  <Text style={styles.bold}>Bet Team ID :</Text>{" "}
-                  {bet.betTeamId.name}
-                </Text>
-                <Text>
-                  <Text style={styles.bold}>Montant :</Text> {bet.amount}
-                </Text>
-                <Text>
-                  <Text style={styles.bold}>Côte :</Text> {bet.odd}
-                </Text>
-              </View>
-            )}
-          />
-          <Pagination
-                currentPage={currentPage}
-                totalPages={betList.totalPages}
-                onPageChange={setCurrentPage}
+            <FlatList
+              data={betList.series}
+              keyExtractor={(bet) => bet.id.toString()}
+              renderItem={({ item: bet }) => (
+                <View style={styles.betItem}>
+                  <Text>
+                    <Text style={styles.bold}>Match ID:</Text> {bet.matchId.name}
+                  </Text>
+                  <Text>
+                    <Text style={styles.bold}>Bet Team ID:</Text>{" "}
+                    {bet.betTeamId.name}
+                  </Text>
+                  <Text>
+                    <Text style={styles.bold}>Montant:</Text> {bet.amount}
+                  </Text>
+                  <Text>
+                    <Text style={styles.bold}>Côte:</Text> {bet.odd}
+                  </Text>
+                </View>
+              )}
+            />
+            <Pagination
+              currentPage={currentPage}
+              totalPages={betList.totalPages}
+              onPageChange={setCurrentPage}
             />
           </View>
-        ) : (<Text>Aucun match disponible</Text>) }
+        ) : (
+          <Text>Aucun match disponible</Text>
+        )}
       </View>
     </View>
   );
@@ -108,11 +109,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#F3F4F6",
     padding: 16,
   },
-  rankBox: {
-    flex: 1,
-    backgroundColor: "#F3F4F6",
-    padding: 16,
-  },
   header: {
     fontSize: 20,
     fontWeight: "bold",
@@ -125,6 +121,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  betItem: {
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    padding: 16,
+    marginBottom: 16,
   },
 });
 
