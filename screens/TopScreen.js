@@ -4,15 +4,18 @@ import { View, Text, FlatList, StyleSheet, ActivityIndicator } from "react-nativ
 
 const TopScreen = () => {
   const [rankList, setRankList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       try {
         const rankData = await user_service.getUsersRanking();
         setRankList(rankData);
       } catch (error) {
         console.error("Erreur lors de la récupération des données :", error);
       }
+      setIsLoading(false);
     };
     fetchData();
   }, []);
@@ -28,6 +31,14 @@ const TopScreen = () => {
       return "#F1F1F1"; // white
     }
   };
+
+  if (isLoading) {
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="#374151" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -63,6 +74,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     width: "100%",
     padding: 16,
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
   },
   headingContainer: {
     alignItems: "center",
