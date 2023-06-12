@@ -24,7 +24,6 @@ const EquipeDetails = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Team Details</Text>
       <Text style={styles.subtitle}>{team.name}</Text>
       <View style={styles.imageContainer}>
         <Image style={styles.image} source={{ uri: team.imageUrl }} />
@@ -64,12 +63,6 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#F3F4F6',
     
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#1F2937',
-    marginBottom: 20,
   },
   subtitle: {
     fontSize: 22,
