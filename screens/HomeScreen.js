@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput, Alert } from "react-native";
 import { matchs_service } from "../services/matchs.service";
 import Pagination from "./pagination/Pagination";
 import { bet_service } from "../services/bet.service";
@@ -80,24 +80,44 @@ const HomeScreen = () => {
   };
 
   const handleValidateBet = () => {
-    
-    cart.forEach((bet) => {
-      bet_service
-        .addBet({
-          matchID: bet.id,
-          betTeamID: bet.team,
-          amount: betAmount,
-        })
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    });
-    handleClearCart();
-  };
+    if (cart.length > 0) {
+      Alert.alert(
+        "Confirmation",
+        "Êtes-vous sûr de vouloir valider ce pari ?",
+        [
+          {
+            text: "Annuler",
+            style: "cancel",
+          },
+          {
+            text: "Valider",
+            onPress: () => {
+              cart.forEach((bet) => {
+                bet_service
+                  .addBet({
+                    matchID: bet.id,
+                    betTeamID: bet.team,
+                    amount: betAmount,
+                  })
+                  .then((res) => {
+                    console.log(res);
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
+             
 
+ });
+              handleClearCart();
+            },
+          },
+        ],
+        { cancelable: false }
+      );
+    } else {
+      Alert.alert("Erreur", "Votre panier est vide. Veuillez ajouter des paris avant de valider.");
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -174,7 +194,9 @@ const HomeScreen = () => {
             <TextInput
               style={styles.betAmountInput}
               value={betAmount}
-              onChangeText={handleBetAmountChange}
+              onChangeText={
+
+handleBetAmountChange}
               keyboardType="numeric"
             />
           </View>
@@ -311,7 +333,9 @@ const styles = StyleSheet.create({
   },
   betAmountContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent:
+
+ "space-between",
     alignItems: "center",
     marginVertical: 5,
   },
