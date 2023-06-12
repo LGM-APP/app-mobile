@@ -52,9 +52,9 @@ const CompetitionDetails = ({ route }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{competition.leagueId.name + " " + competition.fullName}</Text>
-      <Text style={styles.subtitle}>{competition.beginAt}</Text>
-      <Text style={styles.subtitle}>{competition.endAt}</Text>
-      <Text style={styles.subtitle}>{competition.leagueId.videoGame.name}</Text>
+      <Text style={styles.subtitle}>Date de début : {competition.beginAt}</Text>
+      <Text style={styles.subtitle}>Date de fin : {competition.endAt}</Text>
+      <Text style={styles.subtitle}>Jeu de la compétition : {competition.leagueId.videoGame.name}</Text>
       <View style={styles.container}>
             <FlatList
                 data={tournaments}
@@ -65,13 +65,6 @@ const CompetitionDetails = ({ route }) => {
                             style={styles.tournamentLogo}
                             source={{uri: item.logo}}
                         />
-                        <Text style={styles.tournamentName}>{item.name}</Text>
-                        <Text style={styles.tournamentDates}>
-                            Date de début : {item.begin_at}
-                        </Text>
-                        <Text style={styles.tournamentDates}>
-                            Date de fin : {item.end_at}
-                        </Text>
                         <View style={styles.matchList}>
                             <Text style={styles.matchListTitle}>
                                 Liste des matchs
