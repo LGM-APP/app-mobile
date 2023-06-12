@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import { View, Text, StyleSheet, Image, Dimensions, FlatList } from "react-native";
+import { View, Text, StyleSheet, Image, Dimensions, FlatList, ActivityIndicator  } from "react-native";
 import { matchs_service } from "../services/matchs.service";
 import { team_service } from "../services/teams.service";
 
@@ -9,18 +9,29 @@ const EquipeDetails = ({ route }) => {
   const { id } = team;
   const [matchs, setMatchs] = useState([]);
   const [players, setPlayers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetch_data = async () => {
+      setLoading(true);
       const match_data = await matchs_service.getMatchsByTeamId(id);
-      setMatchs(match_data);
-
       const playersData = await team_service.getPlayerByTeamId(id);
+      setMatchs(match_data);
       setPlayers(playersData);
+      setLoading(false);
     }
 
     fetch_data();
   }, [id]);
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#374151" />
+      </View>
+    );
+  }
+
 
   return (
     <View style={styles.container}>
