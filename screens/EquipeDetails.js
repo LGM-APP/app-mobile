@@ -8,28 +8,29 @@ const EquipeDetails = ({ route }) => {
   const { team } = route.params;
   const { id } = team;
   const [matchs, setMatchs] = useState([]);
-    const [players, setPlayers] = useState([]);
+  const [players, setPlayers] = useState([]);
 
-    useEffect(() => {
-        const fetch_data = async () => {
-            const match_data = await matchs_service.getMatchsByTeamId(id);
-            setMatchs(match_data);
+  useEffect(() => {
+    const fetch_data = async () => {
+      const match_data = await matchs_service.getMatchsByTeamId(id);
+      setMatchs(match_data);
 
-            const playersData = await team_service.getPlayerByTeamId(id);
-            setPlayers(playersData);
-        }
+      const playersData = await team_service.getPlayerByTeamId(id);
+      setPlayers(playersData);
+    }
 
-        fetch_data();
-    }, [id]);
+    fetch_data();
+  }, [id]);
 
-    return (
-      <View style={styles.container}>
-        <Text style={styles.title}>Team Details</Text>
-        <Text style={styles.subtitle}>{team.name}</Text>
-        <View style={styles.imageContainer}>
-          <Image style={styles.image} source={{ uri: team.imageUrl }} />
-        </View>
-        <Text style={styles.subtitle}>Matchs</Text>
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Team Details</Text>
+      <Text style={styles.subtitle}>{team.name}</Text>
+      <View style={styles.imageContainer}>
+        <Image style={styles.image} source={{ uri: team.imageUrl }} />
+      </View>
+      <Text style={styles.subtitle}>Matchs</Text>
+      {matchs.length > 0 ? (
         <FlatList
           data={matchs}
           keyExtractor={(item) => item.id.toString()}
@@ -37,8 +38,12 @@ const EquipeDetails = ({ route }) => {
             <Text style={styles.listItem}>{item.name}</Text>
           )}
         />
-  
-        <Text style={styles.subtitle}>Players</Text>
+      ) : (
+        <Text style={styles.listItem}>Aucun match actuellement</Text>
+      )}
+
+      <Text style={styles.subtitle}>Players</Text>
+      {players.length > 0 ? (
         <FlatList
           data={players}
           keyExtractor={(item) => item.id.toString()}
@@ -46,8 +51,11 @@ const EquipeDetails = ({ route }) => {
             <Text style={styles.listItem}>{item.name}</Text>
           )}
         />
-      </View>
-    );  
+      ) : (
+        <Text style={styles.listItem}>Aucun joueurs disponibles</Text>
+      )}
+    </View>
+  );  
 };
 
 const styles = StyleSheet.create({
