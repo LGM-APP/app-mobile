@@ -104,7 +104,7 @@ const HomeScreen = () => {
       <ScrollView style={styles.scrollView}>
         {matches.map((match, index) => (
           <View>
-            <Text>
+            <Text style={styles.compName} >
             {match.tournament && match.tournament.serie.leagueId.name}
                         {" - "}
                         {match.tournament && match.tournament.serie.fullName}
@@ -212,7 +212,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 5,
+  },
+  compName: {
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "center",
   },
   teamName: {
     flex: 1,
