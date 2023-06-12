@@ -1,6 +1,6 @@
 import * as React from 'react';
-import {createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem} from '@react-navigation/drawer';
-import {MaterialCommunityIcons} from '@expo/vector-icons';
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import HomeScreen from '../screens/HomeScreen';
 import EquipeScreen from '../screens/EquipeScreen';
@@ -8,6 +8,7 @@ import ListCompScreen from '../screens/ListCompScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import TopScreen from '../screens/TopScreen';
 import SignupScreen from '../screens/SignupScreen'; // Assurez-vous que le chemin est correct.
+import Logout from '../screens/Logout';
 
 const Drawer = createDrawerNavigator();
 
@@ -15,14 +16,9 @@ function CustomDrawerContent(props) {
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItemList {...props} />
-      <DrawerItem
-        label="Déconnexion"
-        onPress={() => { Drawer.DrawerNavigator = false; props.navigation.navigate('Inscription'); }}
-        icon={({ color, size }) => <MaterialCommunityIcons name="exit-to-app" color={color} size={size} />} // Changer l'icône selon vos préférences
-      />
     </DrawerContentScrollView>
   );
-} 
+}
 
 function DrawerNavigator() {
   return (
@@ -78,12 +74,13 @@ function DrawerNavigator() {
         }}
       />
       <Drawer.Screen
-        name="Inscription"
-        component={SignupScreen}
+        name="Logout"
+        component={Logout}
         options={{
-          drawerLabel: () => null,    // Cela cache l'option dans le tiroir
-          title: null,  // Cela enlève le titre du header (si vous avez des headers)
-          drawerIcon: () => null, // Cela enlève l'icône du tiroir
+          drawerLabel: 'Déconnexion',
+          drawerIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="exit-to-app" color={color} size={size} />
+          ),
         }}
       />
     </Drawer.Navigator>
