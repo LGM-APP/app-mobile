@@ -28,31 +28,35 @@ const EquipeDetails = ({ route }) => {
       <View style={styles.imageContainer}>
         <Image style={styles.image} source={{ uri: team.imageUrl }} />
       </View>
-      <Text style={styles.subtitle}>Matchs</Text>
-      {matchs.length > 0 ? (
-        <FlatList
-          data={matchs}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <Text style={styles.listItem}>{item.name}</Text>
-          )}
-        />
-      ) : (
-        <Text style={styles.listItem}>Aucun match actuellement</Text>
-      )}
-
-      <Text style={styles.subtitle}>Players</Text>
-      {players.length > 0 ? (
-        <FlatList
-          data={players}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <Text style={styles.listItem}>{item.name}</Text>
-          )}
-        />
-      ) : (
-        <Text style={styles.listItem}>Aucun joueurs disponibles</Text>
-      )}
+      <View style={styles.section}>
+        <Text style={styles.subtitle}>Matchs</Text>
+        {matchs.length > 0 ? (
+          <FlatList
+            data={matchs}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <Text style={styles.listItem}>{item.name}</Text>
+            )}
+          />
+        ) : (
+          <Text style={styles.listItem}>Aucun match actuellement</Text>
+        )}
+      </View>
+      
+      <View style={styles.section}>
+        <Text style={styles.subtitle}>Players</Text>
+        {players.length > 0 ? (
+          <FlatList
+            data={players}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <Text style={styles.listItem}>{item.name}</Text>
+            )}
+          />
+        ) : (
+          <Text style={styles.listItem}>Aucun joueur actuellement</Text>
+        )}
+      </View>
     </View>
   );  
 };
@@ -63,6 +67,9 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#F3F4F6',
     
+  },
+  section: {
+    flex: 1,
   },
   subtitle: {
     fontSize: 22,
