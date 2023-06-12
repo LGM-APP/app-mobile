@@ -7,7 +7,6 @@ import EquipeScreen from '../screens/EquipeScreen';
 import ListCompScreen from '../screens/ListCompScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import TopScreen from '../screens/TopScreen';
-import SignupScreen from '../screens/SignupScreen'; // Assurez-vous que le chemin est correct.
 import Logout from '../screens/Logout';
 
 const Drawer = createDrawerNavigator();
