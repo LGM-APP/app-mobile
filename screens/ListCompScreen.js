@@ -65,6 +65,7 @@ const ListCompScreen = ({ navigation }) => {
                 value={search}
                 onChangeText={handleSearchChange}
                 placeholder="Search competitions"
+                style={styles.searchInput}
             />
 
             <View style={styles.filters}>
@@ -168,7 +169,23 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
-    
+    searchInput: {
+        height: 40,
+        borderColor: '#000',
+        borderWidth: 1,
+        borderRadius: 8,
+        margin: 10,
+        paddingLeft: 10,
+        backgroundColor: '#fff',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },    
 });
 
 export default ListCompScreen;
